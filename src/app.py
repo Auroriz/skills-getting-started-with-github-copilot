@@ -50,6 +50,11 @@ class AbstractActivity(ABC):
         pass
 
     @abstractmethod
+    def remove_participant(self, email: str) -> str:
+        """Remove a participant and return the normalized email."""
+        pass
+
+    @abstractmethod
     def is_full(self) -> bool:
         """Return True when the activity has reached capacity."""
         pass
@@ -105,6 +110,18 @@ class Activity(AbstractActivity):
         self._participants.append(normalized_email)
         return normalized_email
 
+    def remove_participant(self, email: str) -> str:
+        normalized_email = email.strip().lower()
+        if not normalized_email:
+            raise ValueError("Email is required")
+
+        try:
+            self._participants.remove(normalized_email)
+        except ValueError as exc:
+            raise ValueError(f"{normalized_email} is not signed up for {self.name}") from exc
+
+        return normalized_email
+
     def is_full(self) -> bool:
         return len(self._participants) >= self._max_participants
 
@@ -125,60 +142,63 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
 # In-memory activity database
 # In-memory activity database
 activities = {
-   "Chess Club": {
-      "description": "Learn strategies and compete in chess tournaments",
-      "schedule": "Fridays, 3:30 PM - 5:00 PM",
-      "max_participants": 12,
-      "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
-   },
-   "Programming Class": {
-      "description": "Learn programming fundamentals and build software projects",
-      "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
-      "max_participants": 20,
-      "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
-   },
-   "Gym Class": {
-      "description": "Physical education and sports activities",
-      "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
-      "max_participants": 30,
-      "participants": ["john@mergington.edu", "olivia@mergington.edu"]
-   },
-   "Basketball Team": {
-      "description": "Competitive basketball training and games",
-      "schedule": "Tuesdays and Thursdays, 4:00 PM - 6:00 PM",
-      "max_participants": 15,
-      "participants": []
-   },
-   "Swimming Club": {
-      "description": "Swimming training and water sports",
-      "schedule": "Mondays and Wednesdays, 3:30 PM - 5:00 PM",
-      "max_participants": 20,
-      "participants": []
-   },
-   "Art Studio": {
-      "description": "Express creativity through painting and drawing",
-      "schedule": "Wednesdays, 3:30 PM - 5:00 PM",
-      "max_participants": 15,
-      "participants": []
-   },
-   "Drama Club": {
-      "description": "Theater arts and performance training",
-      "schedule": "Tuesdays, 4:00 PM - 6:00 PM",
-      "max_participants": 25,
-      "participants": []
-   },
-   "Debate Team": {
-      "description": "Learn public speaking and argumentation skills",
-      "schedule": "Thursdays, 3:30 PM - 5:00 PM",
-      "max_participants": 16,
-      "participants": []
-   },
-   "Science Club": {
-      "description": "Hands-on experiments and scientific exploration",
-      "schedule": "Fridays, 3:30 PM - 5:00 PM",
-      "max_participants": 20,
-      "participants": []
-   }
+   "Chess Club": Activity(
+      "Chess Club",
+      "Learn strategies and compete in chess tournaments",
+      "Fridays, 3:30 PM - 5:00 PM",
+      12,
+      ["michael@mergington.edu", "daniel@mergington.edu"],
+   ),
+   "Programming Class": Activity(
+      "Programming Class",
+      "Learn programming fundamentals and build software projects",
+      "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
+      20,
+      ["emma@mergington.edu", "sophia@mergington.edu"],
+   ),
+   "Gym Class": Activity(
+      "Gym Class",
+      "Physical education and sports activities",
+      "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
+      30,
+      ["john@mergington.edu", "olivia@mergington.edu"],
+   ),
+   "Basketball Team": Activity(
+      "Basketball Team",
+      "Competitive basketball training and games",
+      "Tuesdays and Thursdays, 4:00 PM - 6:00 PM",
+      15,
+   ),
+   "Swimming Club": Activity(
+      "Swimming Club",
+      "Swimming training and water sports",
+      "Mondays and Wednesdays, 3:30 PM - 5:00 PM",
+      20,
+   ),
+   "Art Studio": Activity(
+      "Art Studio",
+      "Express creativity through painting and drawing",
+      "Wednesdays, 3:30 PM - 5:00 PM",
+      15,
+   ),
+   "Drama Club": Activity(
+      "Drama Club",
+      "Theater arts and performance training",
+      "Tuesdays, 4:00 PM - 6:00 PM",
+      25,
+   ),
+   "Debate Team": Activity(
+      "Debate Team",
+      "Learn public speaking and argumentation skills",
+      "Thursdays, 3:30 PM - 5:00 PM",
+      16,
+   ),
+   "Science Club": Activity(
+      "Science Club",
+      "Hands-on experiments and scientific exploration",
+      "Fridays, 3:30 PM - 5:00 PM",
+      20,
+   ),
 }
 
 
@@ -216,3 +236,17 @@ def signup_for_activity(activity_name: str, email: str):
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     return {"message": f"Signed up {signed_up_email} for {activity_name}"}
+
+
+@app.delete("/activities/{activity_name}/participants")
+def remove_participant_from_activity(activity_name: str, email: str):
+    """Unregister a student from an activity."""
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+
+    try:
+        removed_email = activities[activity_name].remove_participant(email)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return {"message": f"Removed {removed_email} from {activity_name}"}
