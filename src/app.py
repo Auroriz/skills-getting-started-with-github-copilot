@@ -123,70 +123,62 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
           "static")), name="static")
 
 # In-memory activity database
+# In-memory activity database
 activities = {
-    "Chess Club": Activity(
-        name="Chess Club",
-        description="Learn strategies and compete in chess tournaments",
-        schedule="Fridays, 3:30 PM - 5:00 PM",
-        max_participants=12,
-        participants=["michael@mergington.edu", "daniel@mergington.edu"],
-    ),
-    "Programming Class": Activity(
-        name="Programming Class",
-        description="Learn programming fundamentals and build software projects",
-        schedule="Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
-        max_participants=20,
-        participants=["emma@mergington.edu", "sophia@mergington.edu"],
-    ),
-    "Gym Class": Activity(
-        name="Gym Class",
-        description="Physical education and sports activities",
-        schedule="Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
-        max_participants=30,
-        participants=["john@mergington.edu", "olivia@mergington.edu"],
-    ),
-    "Soccer Team": Activity(
-        name="Soccer Team",
-        description="Practice teamwork and compete in local soccer matches",
-        schedule="Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
-        max_participants=18,
-        participants=[],
-    ),
-    "Basketball Club": Activity(
-        name="Basketball Club",
-        description="Develop shooting, defense, and game strategy skills",
-        schedule="Wednesdays, 3:30 PM - 5:00 PM",
-        max_participants=15,
-        participants=[],
-    ),
-    "Drama Club": Activity(
-        name="Drama Club",
-        description="Explore acting, stage performance, and theater production",
-        schedule="Mondays, 3:30 PM - 5:00 PM",
-        max_participants=20,
-        participants=[],
-    ),
-    "Art Studio": Activity(
-        name="Art Studio",
-        description="Create paintings, drawings, and visual projects",
-        schedule="Thursdays, 3:30 PM - 5:00 PM",
-        max_participants=16,
-        participants=[],
-    ),
-    "Math Olympiad": Activity(
-        name="Math Olympiad",
-        description="Solve challenging problems and prepare for competitions",
-        schedule="Fridays, 4:00 PM - 5:00 PM",
-        max_participants=12,
-        participants=[],
-    ),
-    "Debate Team": Activity(
-        name="Debate Team",
-        description="Practice public speaking and argumentation in team competitions",
-        schedule="Wednesdays, 3:30 PM - 5:00 PM",
-        max_participants=14,
-        participants=[],
-    ),
+   "Chess Club": {
+      "description": "Learn strategies and compete in chess tournaments",
+      "schedule": "Fridays, 3:30 PM - 5:00 PM",
+      "max_participants": 12,
+      "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
+   },
+   "Programming Class": {
+      "description": "Learn programming fundamentals and build software projects",
+      "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
+      "max_participants": 20,
+      "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
+   },
+   "Gym Class": {
+      "description": "Physical education and sports activities",
+      "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
+      "max_participants": 30,
+      "participants": ["john@mergington.edu", "olivia@mergington.edu"]
+   },
+   "Basketball Team": {
+      "description": "Competitive basketball training and games",
+      "schedule": "Tuesdays and Thursdays, 4:00 PM - 6:00 PM",
+      "max_participants": 15,
+      "participants": []
+   },
+   "Swimming Club": {
+      "description": "Swimming training and water sports",
+      "schedule": "Mondays and Wednesdays, 3:30 PM - 5:00 PM",
+      "max_participants": 20,
+      "participants": []
+   },
+   "Art Studio": {
+      "description": "Express creativity through painting and drawing",
+      "schedule": "Wednesdays, 3:30 PM - 5:00 PM",
+      "max_participants": 15,
+      "participants": []
+   },
+   "Drama Club": {
+      "description": "Theater arts and performance training",
+      "schedule": "Tuesdays, 4:00 PM - 6:00 PM",
+      "max_participants": 25,
+      "participants": []
+   },
+   "Debate Team": {
+      "description": "Learn public speaking and argumentation skills",
+      "schedule": "Thursdays, 3:30 PM - 5:00 PM",
+      "max_participants": 16,
+      "participants": []
+   },
+   "Science Club": {
+      "description": "Hands-on experiments and scientific exploration",
+      "schedule": "Fridays, 3:30 PM - 5:00 PM",
+      "max_participants": 20,
+      "participants": []
+   }
 }
 
 
